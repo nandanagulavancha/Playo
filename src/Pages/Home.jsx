@@ -34,13 +34,13 @@ function Home() {
   navigator.geolocation.getCurrentPosition(success, error, options);
   return (
     <div>
-      <div className="sticky top-0 z-50 bg-white">
+      <div className="sticky top-0 z-50 backdrop-blur-2xl rounded-b-xl" >
         <Header hideLocationSearch={!useIsVisible(target)} />
       </div>
 
       {/* Standard display */}
       {/* HERO */}
-      <div className="bg-white">
+      <div >
         <div className="max-w-7xl mx-auto grid grid-cols-2 gap-8 px-6 py-12 items-center">
           <div>
             <div ref={target} className="flex justify-center">
@@ -51,14 +51,14 @@ function Home() {
               />
             </div>
 
-            <h1 className="text-4xl font-extrabold leading-tight mb-4">
+            <h1 className="text-4xl font-extrabold leading-tight my-4">
               BOOK SPORTS VENUES.
               <br />
               JOIN GAMES.
               <br />
               FIND TRAINERS NEAR YOU.
             </h1>
-            <p className="text-gray-600 max-w-md">
+            <p className="text-gray-600 max-w-md justify-center">
               The World's Largest Sports Community to Book Venues, Find
               Trainers, and Join Games Near You.
             </p>

@@ -8,7 +8,7 @@ function Header({ hideLocationSearch = false }) {
   const [showLogin, setShowLogin] = useState(false);
   // NAVBAR
   return (
-    <div className="bg-white">
+    <div >
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-10">
           <div className="flex items-center">
@@ -42,7 +42,7 @@ function Header({ hideLocationSearch = false }) {
                   fill="#3B4540"
                 ></path>
               </svg>
-              <span className="cursor-pointer  ml-1">Play</span>
+              <span className="cursor-pointer font-black ml-1">Play</span>
             </div>
             <div className="flex items-center">
               <svg
@@ -62,7 +62,7 @@ function Header({ hideLocationSearch = false }) {
                   fill="#3B4540"
                 ></path>
               </svg>
-              <span className="cursor-pointer ml-1">Book</span>
+              <span className="cursor-pointer font-black ml-1">Book</span>
             </div>
             <div className="flex items-center">
               <svg
@@ -91,7 +91,7 @@ function Header({ hideLocationSearch = false }) {
                   </clipPath>
                 </defs>
               </svg>
-              <span className="cursor-pointer  ml-1">Train</span>
+              <span className="cursor-pointer font-black ml-1">Train</span>
             </div>
           </div>
         </div>
@@ -100,6 +100,7 @@ function Header({ hideLocationSearch = false }) {
             onClick={() => setShowLogin(true)}
             className="px-5 py-2 rounded-lg"
           >
+
             <div className="text-sm flex items-center">
               <svg
                 width="2rem"
@@ -122,6 +123,7 @@ function Header({ hideLocationSearch = false }) {
             </div>
           </button>
           <LoginModal isOpen={showLogin} onClose={() => setShowLogin(false)} />
+
         </div>
       </div>
     </div>

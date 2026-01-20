@@ -96,7 +96,7 @@ export default function LocationSearch({ location, setLocation }) {
           className="bg-transparent outline-none text-sm placeholder-gray-500 flex-1"
         />
 
-        <button onClick={detectLocation} className="ml-2 text-lg">
+        <button onClick={detectLocation} className="ml-2 text-lg bg-gray-100" style={{backgroundColor : "#f3f4f6"}}>
           {loading ? "⏳" : <img src="/location-target-svgrepo-com.svg" width="20" height="20" alt="" title="" class="img-small"/>}
         </button>
       </div>
