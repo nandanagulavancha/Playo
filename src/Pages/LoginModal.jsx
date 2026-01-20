@@ -8,7 +8,7 @@ export default function LoginModal({ isOpen, onClose }) {
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50">
       {/* Modal Box */}
-      <div className="bg-white w-[900px] h-[550px] rounded-2xl overflow-hidden flex">
+      <div className="bg-white w-[900px] h-[550px] rounded-2xl overflow-hidden flex relative">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -18,21 +18,11 @@ export default function LoginModal({ isOpen, onClose }) {
         </button>
 
         {/* Left Image Section */}
-        {/* <div className="w-1/2 md:block">
-          <img
-            src={login_top}
-            className="w-full h-full object-cover"
-            alt="map"
-          />
-        </div> */}
         <div className="hidden md:block w-1/2 relative overflow-hidden">
-          {/* Background Image */}
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${login_bg})` }}
           />
-
-          {/* Top Image */}
           <img
             src={login_top}
             className="relative z-10 w-full h-full object-contain"

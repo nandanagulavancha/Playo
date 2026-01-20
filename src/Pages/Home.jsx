@@ -1,12 +1,13 @@
 import React, { useState, useRef } from "react";
-import Header from "../components/Header.jsx";
+import Header from "../components/Header";
 import Footer from "../components/Footer";
-import LocationSearch from "../components/LocationSearch.jsx";
+import LocationSearch from "../components/LocationSearch";
 import Home_book from "../components/Home_book.jsx";
 import useIsVisible from "../components/UseIsVisible.jsx";
 import Home_play from "../components/Home_Play.jsx";
 import Popular_games from "../components/Popular_games.jsx";
 // import LoginModal from "./LoginModal.jsx";
+
 function Home() {
   const [location, setLocation] = useState("");
   // const [showLogin, setShowLogin] = useState(false);
@@ -31,23 +32,12 @@ function Home() {
     console.warn(`ERROR(${err.code}): ${err.message}`);
   }
 
-  const glassmorphism = {
-    // borderTop: "2px solid #ffffff75",
-    // borderLeft: "2px solid #ffffff75",
-    boxShadow: "5px 5px 12px #00000035",
-    background: "#ffffff25",
-    borderRadius: "15px",
-    overflow: "hidden",
-    backdropFilter: "blur(4px)",
-    WebkitBackdropFilter: "blur(4px)", /* Safari support */
-  }
-
   navigator.geolocation.getCurrentPosition(success, error, options);
   return (
     <div>
-      <div className="sticky top-2 z-50  rounded-b-xl" style={glassmorphism} >
-        <Header hideLocationSearch={!useIsVisible(target)} />
-      </div>
+      {/* <div className="sticky top-2 z-50  rounded-b-xl glassmorphism"> */}
+      <Header hideLocationSearch={!useIsVisible(target)} />
+      {/* </div> */}
 
       {/* Standard display */}
       {/* HERO */}
@@ -63,6 +53,7 @@ function Home() {
             </div>
 
             <h1 className="text-4xl font-extrabold leading-tight my-4">
+              {/* text-black"> */}
               BOOK SPORTS VENUES.
               <br />
               JOIN GAMES.
