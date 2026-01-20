@@ -66,9 +66,9 @@ export default function LoginModal({ isOpen, onClose }) {
           <div className="text-center my-6 text-gray-400">Or</div>
 
           <div className="flex gap-4">
-            <button className="flex-1 border rounded-lg py-3 flex items-center justify-center gap-2 hover:bg-gray-50">
+            {/* <button className="flex-1 border rounded-lg py-3 flex items-center justify-center gap-2 hover:bg-gray-50">
               📧 Email Id
-            </button>
+            </button> */}
 
             <button className="flex-1 border rounded-lg py-3 flex items-center justify-center gap-2 hover:bg-gray-50">
               <img
