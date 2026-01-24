@@ -85,19 +85,20 @@ export default function LocationSearch({ location, setLocation }) {
     <div className="relative w-[340px]">
       <div className="flex items-center bg-gray-100 px-4 py-2 rounded-full text-sm ml-2" >
         {/* <span className="mr-2">📍</span> */}
-        <img className="mr-1" src="https://cdn-icons-png.flaticon.com/512/9101/9101314.png " width="20" height="20" alt="" title="" class="img-small"></img>
+        <img className="mr-1 img-small" src="https://cdn-icons-png.flaticon.com/512/9101/9101314.png " width="20" height="20" alt="" title=""></img>
         <input
           value={location}
           onChange={(e) => {
             setLocation(e.target.value);
             fetchSuggestions(e.target.value);
           }}
+          name="location"
           placeholder="Enter your location"
           className="bg-transparent outline-none text-sm placeholder-gray-500 flex-1"
         />
 
-        <button onClick={detectLocation} className="ml-2 text-lg bg-gray-100" style={{backgroundColor : "#f3f4f6"}}>
-          {loading ? "⏳" : <img src="/location-target-svgrepo-com.svg" width="20" height="20" alt="" title="" class="img-small"/>}
+        <button onClick={detectLocation} className="ml-2 text-lg bg-gray-100" style={{ backgroundColor: "#f3f4f6" }}>
+          {loading ? "⏳" : <img src="/location-target-svgrepo-com.svg" width="20" height="20" alt="" title="" className="img-small" />}
         </button>
       </div>
 
@@ -110,9 +111,9 @@ export default function LocationSearch({ location, setLocation }) {
               onClick={() => {
                 setLocation(
                   s.placeName ||
-                    s.place_address ||
-                    s.displayName ||
-                    s.formatted_address
+                  s.place_address ||
+                  s.displayName ||
+                  s.formatted_address
                 );
                 setSuggestions([]);
               }}
