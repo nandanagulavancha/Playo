@@ -42,11 +42,13 @@ export default function LoginModal({ isOpen, onClose, onSuccess }) {
         password: form.password,
       });
 
+      console.log("Login response:", res.data);
+
       const userData = {
         name: res.data.user?.name,
         email: res.data.user?.email,
         mobile: res.data.user?.phone,
-        image: res.data.user?.profileLink !== undefined ? res.data.user.profileLink : `https://robohash.org/${res.data.user?.name?.replaceAll(" ", "-")}`,
+        image: (res.data.user?.profileLink !== null && res.data.user?.profileLink !== undefined) ? res.data.user.profileLink : `https://robohash.org/${res.data.user?.name?.replaceAll(" ", "-")}`,
       };
 
       localStorage.setItem("email", userData.email);

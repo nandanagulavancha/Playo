@@ -1,7 +1,8 @@
 package com.sportify.sports.security;
 
 import io.jsonwebtoken.*;
-        import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -40,11 +41,25 @@ public class JwtService {
         return getClaims(token).getSubject();
     }
 
+    public Date extractExpiration(String token){
+        return getClaims(token).getExpiration();
+    }
+
     private boolean isExpired(String token) {
         return getClaims(token).getExpiration().before(new Date());
     }
 
-    public boolean isValid(String token, String email) {
-        return email.equals(extractUsername(token)) && !isExpired(token);
+    private Key getSignInKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
+
+    private boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    public boolean isValid(String token, String username) {
+        return username.equals(extractUsername(token)) && !isTokenExpired(token);
+    }
+
 }

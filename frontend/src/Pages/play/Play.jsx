@@ -15,7 +15,7 @@ export default function Games() {
     }, []);
 
     return (
-        <div className="big-[#F2F5F2] min-h-screen">
+        <div className="bg-[#F2F5F2] min-h-screen">
             <Header />
 
             <main

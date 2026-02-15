@@ -1,8 +1,122 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import ReactDOM from "react-dom";
+import AvatarEditor from "react-avatar-editor";
+import axiosInstance from "../api/axios";
 
 export default function ProfileModal({ isOpen, onClose, user }) {
   if (!isOpen) return null;
+  const editorRef = useRef(null);
+  const [image, setImage] = useState(null);
+
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadError, setUploadError] = useState("");
+  const [uploading, setUploading] = useState(false);
+
+  const handleSave1 = async () => {
+    if (!editorRef.current) return;
+
+    const canvas = editorRef.current.getImageScaledToCanvas();
+
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
+
+      const file = new File([blob], "profile.png", {
+        type: "image/png",
+      });
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const res = await axiosInstance.post(
+          "/api/upload/profile",
+          formData
+        );
+
+        const imageUrl = res.data;
+        console.log("Uploaded image URL:", imageUrl);
+
+        localStorage.setItem("image", imageUrl);
+        setImage(null);
+        onClose();
+      } catch (err) {
+        console.error("Profile image upload failed:", err);
+      }
+    }, "image/png");
+  };
+
+  const handleSave = async () => {
+    if (!editorRef.current) return;
+
+    setUploadError("");
+    setUploading(true);
+    setUploadProgress(0);
+
+    const canvas = editorRef.current.getImageScaledToCanvas();
+
+    canvas.toBlob(async (blob) => {
+      if (!blob) {
+        setUploadError("Failed to process image");
+        setUploading(false);
+        return;
+      }
+
+      const file = new File([blob], "profile.png", { type: "image/png" });
+
+      // Client-side validation
+      if (file.size > 2 * 1024 * 1024) {
+        setUploadError("Image must be under 2MB");
+        setUploading(false);
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const res = await axiosInstance.post(
+          "/api/upload/profile",
+          formData,
+          {
+            onUploadProgress: (progressEvent) => {
+              if (!progressEvent.total) return;
+              const percent = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              );
+              setUploadProgress(percent);
+            },
+          }
+        );
+        console.log("Uploaded image URL:", res);
+        const imageUrl = res.data;
+        localStorage.setItem("image", imageUrl);
+
+        setUploading(false);
+        setImage(null);
+        onClose();
+      } catch (err) {
+        setUploading(false);
+
+        // 👇 Pass Spring error to UI
+        if (err.response) {
+          setUploadError(
+            err.response.data?.message ||
+            err.response.data ||
+            "Upload failed"
+          );
+        } else {
+          setUploadError("Network error");
+        }
+      }
+    }, "image/png");
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(URL.createObjectURL(file));
+    }
+  };
   // console.log(user);
   const logout = () => {
     localStorage.removeItem("name");
@@ -27,14 +141,75 @@ export default function ProfileModal({ isOpen, onClose, user }) {
 
         {/* Profile Image */}
         <div className="flex items-center gap-4 mb-4">
-          <img
+          {!image && <img
             src={user?.image}
             className="w-20 h-20 rounded-full border object-cover"
             alt="profile"
-          />
-          <button className="px-3 py-1 border rounded-lg text-sm">
+          />}
+          {/* <button className="px-3 py-1 border rounded-lg text-sm">
             Change Photo
           </button>
+          <input className="px-3 py-1 border rounded-lg text-sm" name="Change Photo" type="file" accept="image/*" onChange={handleImageChange} /> */}
+          <label
+            className="
+              inline-flex items-center justify-center
+              px-3 py-1
+              border border-gray-300
+              rounded-lg
+              text-sm font-medium
+              cursor-pointer
+              bg-white
+              hover:bg-gray-100
+              active:scale-95
+              transition
+            "
+          >Change Photo
+            <input
+              type="file"
+              name="change profile photo"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
+            />
+          </label>
+          {image && (<>
+            <AvatarEditor
+              ref={editorRef}
+              image={image}
+              width={200}
+              height={200}
+              border={50}
+              borderRadius={100}
+              scale={1.2}
+              rotate={0}
+              className=""
+            />
+            <button
+              onClick={handleSave}
+              disabled={uploading}
+              className="px-3 py-1 border rounded-lg text-sm disabled:opacity-50"
+            >
+              {uploading ? "Uploading..." : "Save"}
+            </button>
+            {uploading && (
+              <div className="w-full mt-3">
+                <div className="text-sm text-gray-600 mb-1">
+                  Uploading… {uploadProgress}%
+                </div>
+                <div className="w-full h-2 bg-gray-200 rounded">
+                  <div
+                    className="h-2 bg-blue-500 rounded transition-all"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+              </div>
+            )}
+            {uploadError && (
+              <p className="mt-2 text-sm text-red-600">
+                {uploadError}
+              </p>
+            )}
+          </>)}
         </div>
 
         {/* User Info */}

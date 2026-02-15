@@ -26,7 +26,7 @@ export default function Trainer() {
     return (
         <div
             id="parent"
-            className="flex flex-col gap-6 md:gap-[32px] pt-6"
+            className="flex flex-col gap-6 md:gap-[32px]"
         >
             <Header />
             {/* TOP WHITE CARD */}

@@ -1,6 +1,8 @@
-package com.sportify.sports.security;
+package com.sportify.sports.service;
 
+import com.sportify.sports.entity.User;
 import com.sportify.sports.repository.UserRepository;
+import com.sportify.sports.security.CustomUserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
@@ -15,9 +17,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
 
-        return (UserDetails) repository.findByEmail(email)
+        User user = repository.findByEmail(email)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found"));
+
+        return new CustomUserPrincipal(user);
     }
 }
 

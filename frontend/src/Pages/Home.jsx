@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LocationSearch from "../components/LocationSearch";
@@ -29,7 +29,9 @@ function Home() {
     console.warn(`ERROR(${err.code}): ${err.message}`);
   }
 
-  navigator.geolocation.getCurrentPosition(success, error, options);
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(success, error, options);
+  }, []);
 
   return (
     <div className="bg-white text-gray-800">

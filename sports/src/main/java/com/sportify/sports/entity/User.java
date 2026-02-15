@@ -41,6 +41,8 @@ public class User implements UserDetails{
 
     private String profileLink;
 
+    private String profileId;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

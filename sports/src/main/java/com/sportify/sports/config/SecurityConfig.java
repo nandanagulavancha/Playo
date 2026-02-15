@@ -2,9 +2,11 @@ package com.sportify.sports.config;
 
 import com.sportify.sports.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.*;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.*;
@@ -24,69 +26,58 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtFilter;
+        private final JwtAuthenticationFilter jwtFilter;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http)
-            throws Exception {
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http)
+                        throws Exception {
 
-        http
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .sessionManagement(session -> session.sessionCreationPolicy(
-                        SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // 👈 allow preflight
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .anyRequest().authenticated()
-                // .requestMatchers("/",
-                // "/error",
-                // "/swagger-ui.html",
-                // "/swagger-ui/**",
-                // "/v3/api-docs/**",
-                // "/api/auth/**").permitAll()
-                // .requestMatchers("/api/admin/**")
-                // .hasRole("ADMIN")
-                // .anyRequest().authenticated()
-                )
-                .httpBasic(httpBasic -> httpBasic.disable())
-                .formLogin(form -> form.disable())
-                .addFilterBefore(jwtFilter,
-                        UsernamePasswordAuthenticationFilter.class);
+                http
+                        .cors(Customizer.withDefaults())
+                        .csrf(csrf -> csrf.disable())
+                        .sessionManagement(session ->
+                                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        )
+                        .authorizeHttpRequests(auth -> auth
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                .requestMatchers("/api/auth/**", "/error").permitAll()
+                                .requestMatchers("/api/upload/**").authenticated()
+                                .anyRequest().authenticated()
+                        )
+                        .addFilterBefore(jwtFilter,
+                                UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+                return http.build();
+        }
 
-        CorsConfiguration config = new CorsConfiguration();
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
 
-        config.setAllowedOriginPatterns(List.of(
-                "http://localhost:5173"
-        ));
-        config.setAllowedMethods(List.of(
-                "GET", "POST", "PUT", "DELETE", "OPTIONS"
-        ));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
+                CorsConfiguration config = new CorsConfiguration();
 
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
+                config.setAllowedOriginPatterns(List.of(
+                                "http://localhost:5173", "https://7l8584mh-5173.inc1.devtunnels.ms"));
+                config.setAllowedMethods(List.of(
+                                "GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                config.setAllowedHeaders(List.of("*"));
+                config.setAllowCredentials(true);
 
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration config)
-            throws Exception {
-        return config.getAuthenticationManager();
-    }
+                source.registerCorsConfiguration("/**", config);
+                return source;
+        }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public AuthenticationManager authenticationManager(
+                        AuthenticationConfiguration config)
+                        throws Exception {
+                return config.getAuthenticationManager();
+        }
+
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 }
