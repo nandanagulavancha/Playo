@@ -1,5 +1,6 @@
 .archive/
 ./venv/
-*.md
+DataBase.md
+flow.md
 .vscode/
 .idea/
