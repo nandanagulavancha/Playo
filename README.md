@@ -1,19 +1,52 @@
-# React + Vite
+# Backend Setup
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Pre-Setup Requirements
 
-Currently, two official plugins are available:
+- **Install and set up** [Docker](https://docs.docker.com/desktop/).
+- **Set up necessary environment variables** for the services to connect to the databases and other dependencies (you can use a `.env` file in the `services` directory to store these variables). Use the `.env.demo` file as a template.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Running the Services
 
-## React Compiler
+1. Open a terminal and navigate to the `services` directory.
+2. Run the following command to start the services:
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+   ```bash
+   docker compose up --build
+   ```
+3. To automatically rebuild the images when changes are detected:
+    - you can use the `--watch` flag:
+   ```bash
+   docker compose up --build --watch
+   ```
+   - Or, you can use (in new terminal):
+    ```bash
+    docker compose watch
+    ```
+3. The services will be available at the following Ports:
+   - API Gateway: `8040`
+   - Eureka: `8761`
+   - PostgreSQL: `5432`
+   - Redis: `6379`
+4. To stop the services, press `Ctrl + C` in the terminal.
+5. To remove the containers, networks, and volumes created by Docker Compose, run the following command:
+   ```bash
+    docker compose down
+    ```
 
-Note: This will impact Vite dev & build performances.
+## Notes
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-# Playo
+- Ensure that the ports mentioned above are not being used by other applications on your machine.
+- The first time you run the services, Docker will build the images, which may take a few minutes. Subsequent runs will be faster as the images will be cached.
+    * If you make changes to the code and want to rebuild the images, use the `--build` flag as shown in the command above.
+    * If you want to run the services in detached mode (in the background), you can add the `-d` flag:
+      ```bash
+      docker compose up --build -d
+      ```
+    * To rebuild the images without using the cache, you can use the `--no-cache` flag:
+      ```bash
+      docker compose up --build --no-cache
+      ```
+- If you encounter any issues, check the terminal output for error messages and ensure that Docker is running properly on your machine.
+- You can also access the Eureka dashboard at `http://localhost:8761` to see the registered services.
+- For database management, you can use tools like pgAdmin for PostgreSQL and RedisInsight for Redis to connect to the respective databases using the provided ports.
+- Make sure to have the **necessary environment variables set up** for the services to connect to the databases and other dependencies.
