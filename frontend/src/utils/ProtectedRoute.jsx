@@ -104,4 +104,54 @@ export const AdminProtectedRoute = () => {
     return <Outlet />;
 };
 
+export const OwnerProtectedRoute = () => {
+    const [isReady, setIsReady] = useState(false);
+    const { logout } = useAuthStore();
+
+    useEffect(() => {
+        const verify = () => {
+            const token = localStorage.getItem("spj");
+            const userRaw = localStorage.getItem("user");
+            if (!token || !userRaw) {
+                toast.error("Please log in as an owner.");
+                logout();
+                return;
+            }
+
+            let user = null;
+            try {
+                user = JSON.parse(userRaw);
+            } catch {
+                user = null;
+            }
+
+            if (!user) {
+                toast.error("Invalid session. Please log in as owner.");
+                logout();
+                return;
+            }
+
+            const role = (user.role || "").toString().toUpperCase();
+            if (role !== "OWNER") {
+                toast.error("Unauthorized. Owner access required.");
+                logout();
+                return;
+            }
+
+            if (isSessionValid(token, user)) {
+                setIsReady(true);
+                return;
+            }
+
+            toast.error("Session expired. Please log in again.");
+            logout();
+        };
+
+        verify();
+    }, [logout]);
+
+    if (!isReady) return null;
+    return <Outlet />;
+};
+
 export default PlayerProtectedRoute;

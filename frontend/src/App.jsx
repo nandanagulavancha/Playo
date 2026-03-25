@@ -16,8 +16,9 @@ import EventDetails from "./Pages/book/events/EventDetails";
 import MembershipDetails from "./Pages/book/memberships/MembershipDetails";
 import Player from "./Pages/player/Player";
 import Admin from "./Pages/admin/admin";
+import Owner from "./Pages/owner/owner";
 import Layout from "./layouts/Layout";
-import { PlayerProtectedRoute, AdminProtectedRoute } from "./utils/ProtectedRoute";
+import { PlayerProtectedRoute, AdminProtectedRoute, OwnerProtectedRoute } from "./utils/ProtectedRoute";
 import { useAuthStore } from "./stores/authStore";
 import { useEffect } from "react";
 
@@ -49,6 +50,9 @@ function App() {
         <Route path="/venues/membership/:id" element={<MembershipDetails />} />
         <Route element={<AdminProtectedRoute />}>
           <Route path="/admin" element={<Admin />} />
+        </Route>
+        <Route element={<OwnerProtectedRoute />}>
+          <Route path="/owner" element={<Owner />} />
         </Route>
       </Route>
 

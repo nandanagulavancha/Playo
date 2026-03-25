@@ -45,7 +45,6 @@ export default function EditProfile() {
         }
 
         setUploadError("");
-        console.log("Selected file:", file);
         setImage(file);
     };
     const handleSave = async () => {
@@ -55,8 +54,6 @@ export default function EditProfile() {
         const imageChanged = !!editorRef.current;
 
         if (!nameChanged && !imageChanged) return;
-
-        console.log("Saving profile with form data:", form);
 
         try {
             setUploading(true);
