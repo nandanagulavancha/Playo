@@ -26,12 +26,9 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      eureka-server:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - eureka-server
+      - postgres
+      - redis
     env_file:
       - ./.env
     environment:
@@ -47,7 +44,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 10
-      start_period: 60s
+      start_period: 120s
     develop:
       watch:
         - path: ./auth-server/src
@@ -65,10 +62,8 @@ services:
     ports:
       - "8030:8030"
     depends_on:
-      eureka-server:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
+      - eureka-server
+      - postgres
     env_file:
       - ./.env
     environment:
@@ -83,7 +78,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 10
-      start_period: 60s
+      start_period: 120s
     develop:
       watch:
         - path: ./admin-service/src
@@ -101,12 +96,9 @@ services:
     ports:
       - "8031:8031"
     depends_on:
-      eureka-server:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - eureka-server
+      - postgres
+      - redis
     env_file:
       - ./.env
     environment:
@@ -124,7 +116,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 10
-      start_period: 60s
+      start_period: 120s
     develop:
       watch:
         - path: ./owner-service/src
@@ -142,15 +134,13 @@ services:
     ports:
       - "8040:8040"
     depends_on:
-      eureka-server:
-        condition: service_healthy
-      auth-server:
-        condition: service_healthy
+      - eureka-server
+      - auth-server
     environment:
       - SERVER_PORT=8040
       - SPRING_PROFILES_ACTIVE=docker
       - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka
-      - CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173,https://7l8584mh-5173.inc1.devtunnels.ms,https://6lc64ffl-5173.inc1.devtunnels.ms,https://7l8584mh-8040.inc1.devtunnels.ms,https://6lc64ffl-8040.inc1.devtunnels.ms
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:5173}
     networks:
       - playo-network
     restart: unless-stopped
@@ -159,7 +149,7 @@ services:
       interval: 15s
       timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 60s
     develop:
       watch:
         - path: ./api-gateway/src
